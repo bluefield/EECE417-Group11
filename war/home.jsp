@@ -6,7 +6,7 @@
 </head>
 <body>
 	<h1>Welcome to OurParkingSpot.com</h1>
-	<form name ="loginform" method="POST" >
+	<form action ="/checkLogin" method="POST" >
 		User Name:<input type = "text" name="username" required> <br>
 		Password: <input type = "password" name="pswrd" required> <br>
 		<button id="submitButton" type="submit">Submit</button>

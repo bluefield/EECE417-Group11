@@ -25,23 +25,32 @@ import java.util.List;
 
 import javax.servlet.http.*;
 
-
+@SuppressWarnings("serial")
 public class homeServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws IOException {
-        String username =  req.getParameter("username");
-        String password = req.getParameter("pswrd");
-        System.out.println("test");
+        String input_username =  req.getParameter("username");
+        String input_password = req.getParameter("pswrd");
+ 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query userQuery = new Query("User");
-        List<Entity> users = datastore.prepare(userQuery).asList(FetchOptions.Builder.withDefaults());
-        for (Entity user : users) {
-   		 String uname = user.getProperty("username").toString();
-   		 //String markerID = user.getProperty("markerID").toString();
-   		 //String date = user.getProperty("date").toString();
-   		
-   		 System.out.println(uname + "\n");
-   		
+        PreparedQuery pq = datastore.prepare(userQuery);
+        System.out.println("ininin");
+        for (Entity u1:pq.asIterable()){
+        	String username = u1.getProperty("userName").toString();
+        	String password = u1.getProperty("password").toString();
+        	String usertype = u1.getProperty("userType").toString();
+        	if(username.equals(input_username) && password.equals(input_password)){
+        		System.out.println("check");
+        		if(usertype.equals("customer")){
+        			resp.sendRedirect("/customer.jsp");
+        			System.out.println("customer");
+        		}else{
+        			resp.sendRedirect("/host.jsp");
+        		}
+        	}
+        	
         }
+
     }
 }

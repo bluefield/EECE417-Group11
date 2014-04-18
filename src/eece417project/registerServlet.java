@@ -38,6 +38,7 @@ public class registerServlet extends HttpServlet {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		
 		datastore.put(user);
+		
 
         resp.sendRedirect("/home.jsp");
 		
