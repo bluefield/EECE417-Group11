@@ -12,12 +12,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>EECE417Project</servlet-name>
 		<url-pattern>/eece417project</url-pattern>
 	</servlet-mapping>
-	
 	<servlet>
 		<servlet-name>checkLogin</servlet-name>
 		<servlet-class>eece417project.homeServlet</servlet-class>
 	</servlet>
-	
 	<servlet-mapping>
 		<servlet-name>checkLogin</servlet-name>
 		<url-pattern>/checkLogin</url-pattern>
@@ -26,9 +24,25 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <servlet-name>register</servlet-name>
 		<servlet-class>eece417project.registerServlet</servlet-class>
 	</servlet>
+	<servlet>
+	    <servlet-name>customer</servlet-name>
+		<servlet-class>eece417project.customerServlet</servlet-class>
+	</servlet>
+	<servlet>
+	    <servlet-name>host</servlet-name>
+		<servlet-class>eece417project.hostServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 	    <servlet-name>register</servlet-name>
 		<url-pattern>/register</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>customer</servlet-name>
+		<url-pattern>/customer</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>host</servlet-name>
+		<url-pattern>/host</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>
