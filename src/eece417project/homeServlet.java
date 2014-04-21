@@ -50,9 +50,9 @@ public class homeServlet extends HttpServlet {
         	if(username.equals(input_username) && password.equals(input_password)){
         		finduser = true;
         		if(usertype.equals("customer")){
-        			resp.sendRedirect("/customer.jsp");
+        			resp.sendRedirect("/customer.jsp?userName="+s_username);
         		}else{
-        			resp.sendRedirect("/host.jsp");
+        			resp.sendRedirect("/host.jsp?userName="+s_username);
         		}
         	}	
         }

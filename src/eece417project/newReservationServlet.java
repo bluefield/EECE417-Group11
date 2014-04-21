@@ -10,6 +10,13 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -26,6 +33,8 @@ public class newReservationServlet extends HttpServlet {
 	@SuppressWarnings("deprecation")
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
              throws IOException {
+		customerServlet customer = new customerServlet();
+		String username = customer.getUser();
 
 		//grab user inputs from the registration page
         String lotNumber = req.getParameter("lotnum");
@@ -33,7 +42,8 @@ public class newReservationServlet extends HttpServlet {
         String startTime = req.getParameter("start_time");
         String reservationLength = req.getParameter("reserveLength");
         String endTime;
-        String customerUserName = req.getParameter("customer_username_name");
+        String customerUserName = username;
+        String status = "Active";
         SimpleDateFormat systemTimeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         SimpleDateFormat userTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         
@@ -53,20 +63,32 @@ public class newReservationServlet extends HttpServlet {
 		cal.add(Calendar.HOUR, Integer.valueOf(reservationLength));
 		endTime = userTimeFormat.format(cal.getTime());
 		
-        System.out.println(endTime);
-        
-        Entity reservation = new Entity("Reservation");
-        reservation.setProperty("lotNumber", lotNumber);
-        reservation.setProperty("providerName", providerName);
-        reservation.setProperty("startTime", startTime);
-        reservation.setProperty("reservationLength",reservationLength);
-        reservation.setProperty("endTime", endTime);
-        reservation.setProperty("customerUserName", customerUserName);
-		
+		//this query get all reservations which are made by the user 
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Filter customerNameFilter = new FilterPredicate("customerUserName",FilterOperator.EQUAL,customerUserName);
+		Filter reservationStatus = new FilterPredicate("status",FilterOperator.EQUAL,status);
+		Filter activeReservUserFilter = CompositeFilterOperator.and(customerNameFilter, reservationStatus);
+		Query reservationQuery = new Query("Reservation").setFilter(activeReservUserFilter);
+		PreparedQuery pq = datastore.prepare(reservationQuery);
+	    
+		int ActiveReservationCount = 0;
+		for (Entity reservation:pq.asIterable()){
+			reservation.setProperty("activeId", String.valueOf(ActiveReservationCount));
+			datastore.put(reservation);
+		    ActiveReservationCount++;
+	    }
+        Entity newReservation = new Entity("Reservation");
+        newReservation.setProperty("activeId", ActiveReservationCount);
+        newReservation.setProperty("lotNumber", lotNumber);
+        newReservation.setProperty("providerName", providerName);
+        newReservation.setProperty("startTime", startTime);
+        newReservation.setProperty("reservationLength",reservationLength);
+        newReservation.setProperty("endTime", endTime);
+        newReservation.setProperty("customerUserName", customerUserName);
+        newReservation.setProperty("status", status);
 		
-		datastore.put(reservation);
+		datastore.put(newReservation);
 		
-	    resp.sendRedirect("/customer.jsp");
+	    resp.sendRedirect("/customer.jsp?userName="+username);
 	}
 }
