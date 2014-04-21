@@ -26,6 +26,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-class>eece417project.registerServlet</servlet-class>
 	</servlet>
 	<servlet>
+
 	    <servlet-name>customer</servlet-name>
 		<servlet-class>eece417project.customerServlet</servlet-class>
 	</servlet>
@@ -33,6 +34,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <servlet-name>host</servlet-name>
 		<servlet-class>eece417project.hostServlet</servlet-class>
 	</servlet>
+	 <servlet>
+	 <servlet-name>AddParkade</servlet-name>
+	 <servlet-class>eece417project.AddParkadeServlet</servlet-class>
+	</servlet>
+<servlet-mapping>
+	    <servlet-name>AddParkade</servlet-name>
+		<url-pattern>/AddParkade</url-pattern>
+</servlet-mapping>
+
 	<servlet-mapping>
 	    <servlet-name>register</servlet-name>
 		<url-pattern>/register</url-pattern>
